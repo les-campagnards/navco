@@ -1,0 +1,18 @@
+{
+  "name": "navco-server",
+  "version": "0.0.0",
+  "description": "a simple game made in a week end",
+  "author": "les Rotis et leurs amis",
+  "contributors": [{
+    "name": "Foo Bar",
+    "email": "foo.bar@example.com"
+  },
+  {
+    "name": "Foo Bar",
+    "email": "foo.bar@example.com"
+  }],
+  "dependencies": {
+    "websocket": "1.0.23"
+  },
+  "license": "MIT"
+}
