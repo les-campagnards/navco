@@ -23,11 +23,7 @@ A chaque fois qu'un joueur presse ou relache une touche du clavier ou un bouton 
         "left": 1,
         "right": 0
     },
-    "cursor" :
-    {
-        "x": 345,
-        "y": 556
-    }
+    "cursor" : [345, 556]
 }
 ```
 
@@ -56,42 +52,18 @@ A chaque itération du moteur du jeu dans le serveur, ce dernier envoie l'état 
         {
             "id": "Nical",
             "type": "player",
-            "position":
-            {
-                "x": 120,
-                "y": 426
-            },
-            "speed":
-            {
-                "x": 5,
-                "y": 7
-            },
-            "acceleration":
-            {
-                "x": 1,
-                "y": 0
-            },
+            "position": [120, 426],
+            "speed": [5, 7],
+            "acceleration": [1, 0],
             "radius": 5,
             "handicap": 54
         },
         {
             "id": "SuperTirDeGruck",
             "type": "bullet",
-            "position":
-            {
-                "x": 567,
-                "y": 124
-            },
-            "speed":
-            {
-                "x": 2,
-                "y": 0
-            },
-            "acceleration":
-            {
-                "x": 0,
-                "y": 3
-            },
+            "position": [567, 124],
+            "speed": [2, 0],
+            "acceleration": [0, 3],
             "radius": 2
         },
     ],
@@ -100,11 +72,7 @@ A chaque itération du moteur du jeu dans le serveur, ce dernier envoie l'état 
         {
             "id": "NicalPrendCher",
             "type": "death",
-            "position":
-            {
-                "x": 120,
-                "y": 426
-            },
+            "position": [120, 426],
             "duration": 2
         }
     ]
