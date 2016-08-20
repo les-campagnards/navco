@@ -11,60 +11,89 @@ var game = {
     level: {
         // static level data
     },
-    game_state: {
-        // some higher level state, like whether the game loops is active or paused, etc.
-        running: true
-    },
+    events: [],
+    // some higher level state, like whether the game loops is active or paused, etc.
+    running: true,
+    logging: true,
+    fakeServer: false
 };
 
-function client_main() {
+function clientMain() {
 
-  var gameSocket = new WebSocket("ws://127.0.0.1:8080", "navco-protocol");
+    var gameSocket = new WebSocket("ws://127.0.0.1:8080", "navco-protocol");
 
-  gameSocket.onopen = function (event) {
-    console.log("connection oppened with the server")
+    gameSocket.onopen = function (event) {
+        console.log("connection oppened with the server")
 
-
-
-    setInterval(function(){
-        gameSocket.send(JSON.stringify(document));
-      },1000);
+        setInterval(function(){
+            gameSocket.send(JSON.stringify(document));
+        },1000);
   };
 
-  gameSocket.onmessage = function (event) {
-    console.log("rcvd" + event.data);
-  }
+    gameSocket.onmessage = function (event) {
+        console.log("rcvd" + event.data);
+    }
+
+    gameSocket.onerror = function (event) {
+        console.log("failed to connect to the server, defaulting to the fake server for debgging");
+        game.fakeServer = true;
+    }
 
     console.log("j'ai soif");
 
-    renderer_init(game);
+    rendererInit(game);
 
-    anim_cb(16);
+    animCb(16);
 }
 
-function anim_cb() {
-    var elapsed_time = 16; // TODO
+function animCb() {
+    var elapsedTime = 16; // TODO
 
     // TODO consume inputs.
 
-    client_game_tick(elapsed_time);
+    if (game.fakeServer) {
+        fakeServerTick(elapsedTime);
+    }
 
-    renderer_tick(game, elapsed_time);
+    clientGameTick(elapsedTime);
 
-    if (game.game_state.running) {
-        requestAnimationFrame(anim_cb);
+    rendererTick(game, elapsedTime);
+
+    if (game.running) {
+        requestAnimationFrame(animCb);
     }
 }
 
-function client_game_tick(elapsed_time) {
-    // console.log("client_game_tick");
+function clientGameTick(elapsedTime) {
+    // console.log("clientGameTick");
+
+    // Flush all events;
+    var events = game.events;
+    game.events = [];
+
+    // process them
+    for (var i in events) {
+        // TODO
+        console.log(events[i]);
+    }
 }
 
-function pause_game() {
-    game.game_state.running = false;
+function pauseGame() {
+    game.running = false;
 }
 
-function resume_game() {
-    game.game_state.running = true;
-    anim_cb(16);
+function resumeGame() {
+    game.running = true;
+    animCb(16);
+}
+
+function handleServerMessage(msg) {
+    var objects = msg.objects;
+
+    // We replace the current game state with the last one received from the server, but
+    // we accumulate events.
+    // All of that is handled later in clientGameTick
+    game.info = msg.gameInfos;
+    game.objects = msg.objects;
+    game.events = game.events.concat(msg.events);
 }
