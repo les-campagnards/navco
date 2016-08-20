@@ -26,9 +26,9 @@ function client_main() {
 
 
 
-    setInterval(function(){
-        gameSocket.send(JSON.stringify(document));
-      },1000);
+    var nick = prompt("your nickname ?");
+    gameSocket.send(JSON.stringify({messagetype:"clientConnection", nickname:nick}));
+
   };
 
   gameSocket.onmessage = function (event) {

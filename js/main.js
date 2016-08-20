@@ -2,6 +2,8 @@
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 
+var gameLogic = require('./game_logic.js');
+
 var server = http.createServer(function(request, response) {
     console.log((new Date()) + ' Received request for ' + request.url);
     response.writeHead(404);
@@ -26,7 +28,7 @@ function originIsAllowed(origin) {
   return true;
 }
 
-var players = [];
+
 
 wsServer.on('request', function(request) {
     if (!originIsAllowed(request.origin)) {
@@ -38,38 +40,24 @@ wsServer.on('request', function(request) {
 
     var connection = request.accept('navco-protocol', request.origin);
 
-    players.push({
-      connection : connection,
-      nickname : null,
-      state : "ValidationPending"});
 
 
     console.log((new Date()) + ' Connection accepted.');
 
-    //ask for username
-    //test if username is unique in the list
-    //if ok change state to "waiting"
-
-    //TODO : move this to a gameplay.js
 
 
 
-    connection.on('message', function(message) {
-        if (message.type === 'utf8') {
+      connection.on('message', function(message) {
+          if (message.type === 'utf8') {
             console.log('Received Message: ' + message.utf8Data);
-            connection.sendUTF(message.utf8Data);
+          var messageData = JSON.parse(message.utf8Data);
+          if (messageData.messagetype === "clientConnection"){
+              gameLogic.newPlayerConnected(connection, messageData.nickname);
+          }
         }
     });
     connection.on('close', function(reasonCode, description) {
-        for (var index = 0; index < players.length; index++) {
-            if (players[index] === connection) {
-              // Remove array item at current index
-              players.splice(index, 1);
-
-              index--;
-            }
-        }
+        gameLogic.playerDisconnected(connection);
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-
     });
 });
