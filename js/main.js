@@ -39,7 +39,7 @@ wsServer.on('request', function(request) {
     }
 
     var connection = request.accept('navco-protocol', request.origin);
-
+    var player = null;
 
 
     console.log((new Date()) + ' Connection accepted.');
@@ -51,8 +51,12 @@ wsServer.on('request', function(request) {
           if (message.type === 'utf8') {
             console.log('Received Message: ' + message.utf8Data);
           var messageData = JSON.parse(message.utf8Data);
-          if (messageData.messagetype === "clientConnection"){
-              gameLogic.newPlayerConnected(connection, messageData.nickname);
+          if (messageData.messageType === "clientConnection"){
+              player = gameLogic.newPlayerConnected(connection, messageData.nickname);
+              connection.send(JSON.stringify({messageType:"connectionAuthorized", nickname:player.nickname}));
+          }
+          else if (messageData.messagetype === "playerInput"){
+              gameLogic.playerInput(player, messageData);
           }
         }
     });

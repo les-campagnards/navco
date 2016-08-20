@@ -27,13 +27,26 @@ function client_main() {
 
 
     var nick = prompt("your nickname ?");
-    gameSocket.send(JSON.stringify({messagetype:"clientConnection", nickname:nick}));
+    gameSocket.send(JSON.stringify({messageType:"clientConnection", nickname:nick}));
 
   };
 
   gameSocket.onmessage = function (event) {
     console.log("rcvd" + event.data);
   }
+
+  document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    var charCode = evt.keyCode || evt.which;
+    var charStr = String.fromCharCode(charCode);
+    console.log("down"+ charStr);
+  };
+  document.onkeyup = function(evt) {
+    evt = evt || window.event;
+    var charCode = evt.keyCode || evt.which;
+    var charStr = String.fromCharCode(charCode);
+    console.log("up"+ charStr);
+  };
 
     console.log("j'ai soif");
 
