@@ -110,3 +110,20 @@ A chaque itération du moteur du jeu dans le serveur, ce dernier envoie l'état 
     ]
 }
 ```
+
+## Connexion au serveur
+
+Lorsqu'un client se connecte au serveur, le premier message qu'il doit envoyer a un format spécifique.
+
+| Identifiant | clientConnection |
+| ------------ | ------ |
+| *Expéditeur* | Client |
+| *Destinataire* | Serveur |
+| *Périodicité* | Evenementielle |
+
+```json
+{
+    "messageType": "clientConnection",
+    "nickname": "Nical"
+}
+```
