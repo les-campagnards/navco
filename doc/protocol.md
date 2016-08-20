@@ -44,7 +44,7 @@ A chaque itération du moteur du jeu dans le serveur, ce dernier envoie l'état 
 
 ```json
 {
-    "messageType": "gameLoop",
+    "messageType": "gameState",
     "gameInfos":
     {
         "status": "playing",
