@@ -7,7 +7,7 @@ messages sont définis ci-dessous.
 
 A chaque fois qu'un joueur presse ou relache une touche du clavier ou un bouton de la souris, le client envoie un rapprt d'interaction au serveur.
 
-| Identifiant | playerInput | 
+| Identifiant | playerInput |
 | ------------ | ------ |
 | *Expéditeur* | Client |
 | *Destinataire* | Serveur |
@@ -15,6 +15,7 @@ A chaque fois qu'un joueur presse ou relache une touche du clavier ou un bouton 
 
 ```json
 {
+    "messageType": "playerInput",
     "keys" :
     {
         "up": 0,
@@ -34,7 +35,7 @@ A chaque fois qu'un joueur presse ou relache une touche du clavier ou un bouton 
 
 A chaque itération du moteur du jeu dans le serveur, ce dernier envoie l'état complet de la partie à tous les clients.
 
-| Identifiant | playerInput | 
+| Identifiant | gameLoop |
 | ------------ | ------ |
 | *Expéditeur* | Serveur |
 | *Destinataire* | Tous les clients |
@@ -43,11 +44,12 @@ A chaque itération du moteur du jeu dans le serveur, ce dernier envoie l'état 
 
 ```json
 {
-    "game_infos":
+    "messageType": "gameLoop",
+    "gameInfos":
     {
         "status": "playing",
-        "remaning_time": 600,
-        "remaning_points": 3
+        "remaningTime": 600,
+        "remaningPoints": 3
     },
     "objects" :
     [
