@@ -48,7 +48,7 @@ A chaque itération du moteur du jeu dans le serveur, ce dernier envoie l'état 
     "gameInfos":
     {
         "status": "playing",
-        "remaningTime": 600,
+        "remaningTime": 600, //in ms
         "remaningPoints": 3
     },
     "objects" :
