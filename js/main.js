@@ -52,11 +52,14 @@ wsServer.on('request', function(request) {
             console.log('Received Message: ' + message.utf8Data);
           var messageData = JSON.parse(message.utf8Data);
           if (messageData.messageType === "clientConnection"){
-              player = gameLogic.newPlayerConnected(connection, messageData.nickname);
+              player = gameLogic.playerConnected(connection, messageData.nickname);
               connection.send(JSON.stringify({messageType:"connectionAuthorized", nickname:player.nickname}));
           }
-          else if (messageData.messagetype === "playerInput"){
+          else if (messageData.messageType === "playerInput"){
               gameLogic.playerInput(player, messageData);
+          }
+          else if (messageData.messageType === "clientReady"){
+              gameLogic.playerReady(player);
           }
         }
     });

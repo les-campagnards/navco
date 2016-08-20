@@ -15,23 +15,27 @@ var game = {
         // some higher level state, like whether the game loops is active or paused, etc.
         running: true
     },
+    socket : null;
 };
 
 function client_main() {
 
-  var gameSocket = new WebSocket("ws://127.0.0.1:8080", "navco-protocol");
+  game.socket = new WebSocket("ws://127.0.0.1:8080", "navco-protocol");
 
-  gameSocket.onopen = function (event) {
+  game.socket.onopen = function (event) {
     console.log("connection oppened with the server")
 
 
 
     var nick = prompt("your nickname ?");
-    gameSocket.send(JSON.stringify({messageType:"clientConnection", nickname:nick}));
+    game.socket.send(JSON.stringify({messageType:"clientConnection", nickname:nick}));
+
+    var ready = prompt("ready ?");
+    game.socket.send(JSON.stringify({messageType:"clientReady"}));
 
   };
 
-  gameSocket.onmessage = function (event) {
+  game.socket.onmessage = function (event) {
     console.log("rcvd" + event.data);
   }
 
