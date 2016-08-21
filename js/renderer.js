@@ -114,8 +114,8 @@ function updateCamera(game, elapsedTime) {
     }
 
     if (!isVec2(cam)) {
-        console.log("cam is not a vec2 ", cam)
-        return;
+        //console.log("cam is not a vec2 ", cam)
+        cam = pixi_vec2(cam);
     }
 
     var dt = elapsedTime / 16;
@@ -141,4 +141,3 @@ function pixi_vec2(v) { return { x: v[0], y: [1] }; }
 function pixi_set_vec2(dst, src) { dst.x = src[0]; dst.y = src[1]; }
 function glm_vec2(v) { return [v.x, v.y] }
 function glm_set_vec2(dst, src) { dst[0] = src.x; dst[1] = srx.y; }
-

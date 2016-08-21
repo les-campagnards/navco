@@ -16,14 +16,10 @@ var game = {
     running: true,
     logging: true,
     fakeServer: false,
-    game_state: {
-        // some higher level state, like whether the game loops is active or paused, etc.
-        running: true
-    },
     socket : null
 };
 
-function client_main() {
+function clientMain() {
 
   game.socket = new WebSocket("ws://127.0.0.1:8080", "navco-protocol");
 
@@ -38,8 +34,16 @@ function client_main() {
 
   };
 
+  game.socket.onerror = function (event){
+    game.fakeServer = true;
+  }
+
   game.socket.onmessage = function (event) {
     console.log("rcvd" + event.data);
+    var msg = JSON.parse(event.data);
+    if(msg.messageType === "gameState"){
+      handleServerMessage(msg);      
+    }
   }
 
 

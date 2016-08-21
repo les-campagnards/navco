@@ -10,7 +10,8 @@ var rules = {
   gameMode : "time", //stocks
   gameDuration : 10000,
   maxStocks : 5,
-  minPlayersForGame : 2
+  minPlayersForGame : 2,
+  tickDelai : 16
 }
 
 var playerConnected = function (connection, nickname){
@@ -86,14 +87,72 @@ var playerReady = function(player){
   console.log(players);
 }
 
+var meh = 0;
+
+function fakeMessage(elapsedTime) {
+    var t = meh * 0.01;
+    var msg = {
+        "messageType": "gameState",
+        "gameInfos":
+        {
+            "status": "playing",
+            "remaningTime": 600,
+            "remaningPoints": 3
+        },
+        "objects" : {
+            "nical": {
+                "type": "player1",
+                "position": [200+120 * Math.sin(t), 200 + 100 * Math.cos(t)],
+                "rotation": t * 2.1,
+                "speed": [5, 7],
+                "acceleration": [1, 0],
+                "radius": 5,
+                "handicap": 54
+            },
+            "Gruck" : {
+                "type": "player2",
+                "position": [567 + Math.sin(t*5) * 100, 124],
+                "rotation": Math.sin(t),
+                "speed": [2, 0],
+                "acceleration": [0, 3],
+                "radius": 2
+            },
+        },
+        "events": [
+        ]
+    };
+    if (meh++ % 100 == 0) {
+        msg.events.push({
+            "id": "NicalPrendCher",
+            "type": "death",
+            "position": [120, 426],
+            "duration": 2
+        });
+    }
+
+    return msg;
+
+}
+
+var gameTick = function(){
+  console.log("tick");
+  notifystatus();
+
+  players.filter(function(elem){return elem.status === "playing"}).forEach(function(player){
+    player.connection.send(JSON.stringify(fakeMessage(Date.now() - gamestatus.gameStartTimestamp)));
+    console.log("sent data to player : " + player.nickname);
+  });
+}
+
 
 var initGame = function(){
   gamestatus.gameStartTimestamp = Date.now();
   gamestatus.status = "running";
-  gamestatus.gameLoopTimerId =  setInterval(notifystatus, 1000); // TODO : set to a much smaller delay
 
   //change status of each waiting players
   players.forEach(function(elem){elem.status = "playing"});
+
+  gamestatus.gameLoopTimerId =  setInterval(gameTick, rules.tickDelai); // TODO : set to a much smaller delay
 
   console.log("game started at ", gamestatus.gameStartTimestamp);
 
