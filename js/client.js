@@ -50,6 +50,13 @@ function setUpServerConnection(){
       game.playerNickname = msg.nickname;
       game.state = "connected";
     }
+    if(msg.messageType === "gameStarted"){
+      game.state = "playing";
+    }
+    if(msg.messageType === "gameEnded"){
+      game.state = "connected";
+      tryToStartGame();
+    }
     if(msg.messageType === "gameState"){
       handleServerMessage(msg);
     }

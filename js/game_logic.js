@@ -150,9 +150,13 @@ var initGame = function(){
   gamestatus.status = "running";
 
   //change status of each waiting players
-  players.forEach(function(elem){elem.status = "playing"});
+  //TODO : filter only on waiting players
+  players.forEach(function(elem){
+      elem.status = "playing";
+      elem.connection.send(JSON.stringify({messageType:"gameStarted"}));
+    });
 
-  gamestatus.gameLoopTimerId =  setInterval(gameTick, rules.tickDelai); // TODO : set to a much smaller delay
+  gamestatus.gameLoopTimerId =  setInterval(gameTick, rules.tickDelai);
 
   console.log("game started at ", gamestatus.gameStartTimestamp);
 
@@ -178,8 +182,12 @@ var stopGame = function(){
     status : "pending",
     gameLoopTimerId : null
   };
+  
   //place  each player as waiting
-  players.forEach(function(elem){elem.status = "waiting"});
+  players.forEach(function(elem){
+      elem.status = "waiting";
+      elem.connection.send(JSON.stringify({messageType:"gameEnded"}));
+    });
 
   setTimeout(tryStartingGame,30000);
 
