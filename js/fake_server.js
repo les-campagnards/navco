@@ -1,3 +1,5 @@
+'use strict';
+
 var meh = 0;
 
 function fakeServerTick(elapsedTime) {

@@ -1,4 +1,8 @@
+'use strict';
+
 var game = {
+    playerNickname : null,
+    state : "notConnected",
     renderer: {},
     inputs: {
         // TODO: figure out how inputs show work, I guess we should accumulate inputs from the
@@ -19,18 +23,16 @@ var game = {
     socket : null
 };
 
-function clientMain() {
+function setUpServerConnection(){
 
   game.socket = new WebSocket("ws://127.0.0.1:8080", "navco-protocol");
 
   game.socket.onopen = function (event) {
     console.log("connection oppened with the server")
 
-    var nick = prompt("your nickname ?");
-    game.socket.send(JSON.stringify({messageType:"clientConnection", nickname:nick}));
+    // has to be at connection time for server might assign an alternative nickname
+    promptForNickname(function(res){game.socket.send(JSON.stringify({messageType:"clientConnection", nickname:res.nick}))});
 
-    var ready = prompt("ready ?");
-    game.socket.send(JSON.stringify({messageType:"clientReady"}));
 
   };
 
@@ -39,14 +41,23 @@ function clientMain() {
   }
 
   game.socket.onmessage = function (event) {
+
+
     console.log("rcvd" + event.data);
     var msg = JSON.parse(event.data);
+    if(msg.messageType === "connectionAuthorized"){
+      console.log("connected with nickname :" + msg.nickname);
+      game.playerNickname = msg.nickname;
+      game.state = "connected";
+    }
     if(msg.messageType === "gameState"){
-      handleServerMessage(msg);      
+      handleServerMessage(msg);
     }
   }
 
+}
 
+function setUpInputCatching(){
   document.onkeydown = function(evt) {
     evt = evt || window.event;
     var charCode = evt.keyCode || evt.which;
@@ -59,12 +70,33 @@ function clientMain() {
     var charStr = String.fromCharCode(charCode);
     console.log("up"+ charStr);
   };
+}
 
-    console.log("j'ai soif");
 
-    rendererInit(game);
+function tryToStartGame(){
+  console.log("trying to start game");
+  if(game.state !== "connected"){
+    setTimeout(tryToStartGame, 1000);
+  }else{
+    promptForReady(function(){game.socket.send(JSON.stringify({messageType:"clientReady"}));});
+  }
+}
 
-    animCb(16);
+function clientMain() {
+
+  setUpServerConnection();
+
+  //TODO : loop here for each game
+  // Have to check ready after each game
+  //let's poll on game.state to know if wee should ask the player if he is ready
+
+  tryToStartGame();
+
+  setUpInputCatching();
+
+  rendererInit(game);
+
+  animCb();
 }
 
 function animCb() {
