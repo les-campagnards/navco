@@ -1,13 +1,6 @@
 /*global
 	location
 	WebSocket
-
-	fakeServerTick
-	promptForNickname
-	promptForReady
-	requestAnimationFrame
-	rendererInit
-	rendererTick
 */
 
 'use strict';

@@ -1,7 +1,3 @@
-/*global
-    handleServerMessage
-*/
-
 'use strict';
 
 var meh = 0;
