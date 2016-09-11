@@ -75,6 +75,7 @@ function prepareInputMessage(evt, upOrDown){
   evt = evt || window.event;
   var charCode = evt.keyCode || evt.which;
   var key = null;
+  //TODO : add querty and azerty usuel input key support
   switch(charCode){
     case 37 :
       if(inputState["left"] !== upOrDown){

@@ -24,7 +24,14 @@ var playerConnected = function (connection, nickname){
   var player = {
     connection : connection,
     nickname : nickname,
-    status : "waiting"};
+    status : "waiting",
+    keys : {
+      left : "up",
+      top : "up",
+      right : "up",
+      down : "up"
+    }
+  };
   players.push(player);
   console.log("[ " + players.length + " ] players connected, last : ", nickname);
 
@@ -53,7 +60,7 @@ var playerDisconnected = function(connection){
 
 var playerInput = function(aplayer, messageData){
   var player = players.find(function(elem){return elem.nickname === aplayer.nickname});
-  player.keys = messageData.keys;
+  player.keys[messageData.key] = messageData.upOrDown;
   player.cursor = messageData.cursor;
 }
 
@@ -88,6 +95,8 @@ var playerReady = function(player){
 }
 
 var meh = 0;
+var positions = [ 400, 300];
+
 
 function fakeMessage(elapsedTime) {
     var t = meh * 0.01;
@@ -102,7 +111,7 @@ function fakeMessage(elapsedTime) {
         "objects" : {
             "nical": {
                 "type": "player1",
-                "position": [200+120 * Math.sin(t), 200 + 100 * Math.cos(t)],
+                "position": players[0].position,
                 "rotation": t * 2.1,
                 "speed": [5, 7],
                 "acceleration": [1, 0],
@@ -111,7 +120,7 @@ function fakeMessage(elapsedTime) {
             },
             "Gruck" : {
                 "type": "player2",
-                "position": [567 + Math.sin(t*5) * 100, 124],
+                "position": players[1].position,
                 "rotation": Math.sin(t),
                 "speed": [2, 0],
                 "acceleration": [0, 3],
@@ -138,7 +147,18 @@ var gameTick = function(){
   console.log("tick");
   notifystatus();
 
+  //TODO consume input to reresh players positions
+
+
+
   players.filter(function(elem){return elem.status === "playing"}).forEach(function(player){
+
+    //TODO : use inputs to alter acceleration and speed instead of position
+    player.position[0] += player.keys["top"] === "down" ? 1 : 0;
+    player.position[0] -= player.keys["down"] === "down" ? 1 : 0;
+    player.position[1] += player.keys["left"] === "down" ? 1 : 0;
+    player.position[1] -= player.keys["right"] === "down" ? 1 : 0;
+
     player.connection.send(JSON.stringify(fakeMessage(Date.now() - gamestatus.gameStartTimestamp)));
     console.log("sent data to player : " + player.nickname);
   });
@@ -153,6 +173,7 @@ var initGame = function(){
   //TODO : filter only on waiting players
   players.forEach(function(elem){
       elem.status = "playing";
+      elem.position=[400,300]; //TODO : have better spawn points
       elem.connection.send(JSON.stringify({messageType:"gameStarted"}));
     });
 
@@ -182,7 +203,7 @@ var stopGame = function(){
     status : "pending",
     gameLoopTimerId : null
   };
-  
+
   //place  each player as waiting
   players.forEach(function(elem){
       elem.status = "waiting";
