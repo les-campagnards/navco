@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-var app = express();
 var express = require('express');
 var http = require('http');
 var WebSocketServer = require('websocket').server;
+
+var app = express();
 
 app.use(express.static('..'));
 

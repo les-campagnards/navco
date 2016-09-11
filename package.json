@@ -15,5 +15,8 @@
     "websocket": "1.0.23",
     "express" : "*"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "node js/main.js"
+  }
 }
