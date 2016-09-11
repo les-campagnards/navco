@@ -64,18 +64,72 @@ function setUpServerConnection(){
 
 }
 
+var inputState = {
+  left : "up",
+  top : "up",
+  right : "up",
+  down : "up"
+}
+
+function prepareInputMessage(evt, upOrDown){
+  evt = evt || window.event;
+  var charCode = evt.keyCode || evt.which;
+  var key = null;
+  switch(charCode){
+    case 37 :
+      if(inputState["left"] !== upOrDown){
+        key = "left";
+        inputState["left"] = upOrDown;
+        break;
+      }else{
+        return null;
+      }
+    case 38 :
+      if(inputState["top"] !== upOrDown){
+        key = "top";
+        inputState["top"] = upOrDown;
+        break;
+      }else{
+        return null;
+      }
+    case 39 :
+      if(inputState["right"] !== upOrDown){
+        key = "right";
+        inputState["right"] = upOrDown;
+        break;
+      }else{
+        return null;
+      }
+    case 40 :
+      if(inputState["down"] !== upOrDown){
+        key = "down";
+        inputState["down"] = upOrDown;
+        break;
+      }else{
+        return null;
+      }
+  }
+  if(key)
+    return {messageType : "playerInput", upOrDown, key};
+
+}
+
 function setUpInputCatching(){
   document.onkeydown = function(evt) {
-    evt = evt || window.event;
-    var charCode = evt.keyCode || evt.which;
-    var charStr = String.fromCharCode(charCode);
-    console.log("down"+ charStr);
+    var msg = prepareInputMessage(evt, "down");
+    if(msg){
+      game.socket.send(JSON.stringify(msg));
+
+      console.log("inputMessageSent" + JSON.stringify(msg));
+    }
   };
   document.onkeyup = function(evt) {
-    evt = evt || window.event;
-    var charCode = evt.keyCode || evt.which;
-    var charStr = String.fromCharCode(charCode);
-    console.log("up"+ charStr);
+    var msg = prepareInputMessage(evt, "up");
+    if(msg){
+      game.socket.send(JSON.stringify(msg));
+      console.log("inputMessageSent" + JSON.stringify(msg));
+    }
+
   };
 }
 
