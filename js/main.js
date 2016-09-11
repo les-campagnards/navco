@@ -2,6 +2,15 @@
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 
+var express = require('express');
+var app = express();
+
+app.use(express.static('..'));
+
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!');
+});
+
 var gameLogic = require('./game_logic.js');
 
 var server = http.createServer(function(request, response) {

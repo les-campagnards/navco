@@ -12,7 +12,8 @@
     "email": "foo.bar@example.com"
   }],
   "dependencies": {
-    "websocket": "1.0.23"
+    "websocket": "1.0.23",
+    "express" : "*"
   },
   "license": "MIT"
 }
