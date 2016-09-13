@@ -58,10 +58,7 @@ var playerDisconnected = function (connection) {
 	}
 };
 
-var playerInput = function (aplayer, messageData) {
-	var player = players.find(function (elem) {
-		return elem.nickname === aplayer.nickname;
-	});
+var playerInput = function (player, messageData) {
 	if(messageData.upOrDown)
 		player.keys[messageData.key] = messageData.upOrDown;
 	if(messageData.mousePosition)
@@ -93,10 +90,7 @@ var notifystatus = function () {
 };
 
 var playerReady = function (player) {
-	players.find(function (elem) {
-		return elem.nickname === player.nickname;
-	}).status = 'ready';
-	console.log(players);
+	player.status = 'ready';
 };
 
 var meh = 0;
