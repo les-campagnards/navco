@@ -32,8 +32,10 @@ var playerConnected = function (connection, nickname) {
 			top: 'up',
 			right: 'up',
 			down: 'up'
-		}
+		},
+		mousePosition : [0,0]
 	};
+
 	players.push(player);
 	console.log('[ ' + players.length + ' ] players connected, last: ', nickname);
 
@@ -60,8 +62,10 @@ var playerInput = function (aplayer, messageData) {
 	var player = players.find(function (elem) {
 		return elem.nickname === aplayer.nickname;
 	});
-	player.keys[messageData.key] = messageData.upOrDown;
-	player.cursor = messageData.cursor;
+	if(messageData.upOrDown)
+		player.keys[messageData.key] = messageData.upOrDown;
+	if(messageData.mousePosition)
+		player.mousePosition = messageData.mousePosition;
 };
 
 var notifystatus = function () {
@@ -112,7 +116,7 @@ function fakeMessage (elapsedTime) {
 			'nical': {
 				'type': 'player1',
 				'position': players[0].position,
-				'rotation': t * 2.1,
+				'rotation': players[0].mousePosition.x / 360,
 				'speed': [5, 7],
 				'acceleration': [1, 0],
 				'radius': 5,
@@ -121,7 +125,7 @@ function fakeMessage (elapsedTime) {
 			'Gruck': {
 				'type': 'player2',
 				'position': players[1].position,
-				'rotation': Math.sin(t),
+				'rotation': players[1].mousePosition.x / 360,
 				'speed': [2, 0],
 				'acceleration': [0, 3],
 				'radius': 2
