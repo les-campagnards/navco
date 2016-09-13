@@ -28,7 +28,7 @@ var game = {
 };
 
 function setUpServerConnection () {
-	game.socket = new WebSocket('ws://localhost:8080', 'navco-protocol');
+	game.socket = new WebSocket("ws://"+location.href.split( '/' )[2].split(':')[0]+":8080", "navco-protocol");
 
 	game.socket.onopen = function (event) {
 		console.log('connection oppened with the server');
