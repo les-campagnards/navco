@@ -28,7 +28,7 @@ var game = {
 };
 
 function setUpServerConnection () {
-	game.socket = new WebSocket("ws://"+location.href.split( '/' )[2].split(':')[0]+":8080", "navco-protocol");
+	game.socket = new WebSocket(location.origin.replace(/^http/, 'ws'));
 
 	game.socket.onopen = function (event) {
 		console.log('connection oppened with the server');
@@ -36,6 +36,7 @@ function setUpServerConnection () {
 		// has to be at connection time for server might assign an alternative nickname
 		promptForNickname(function (res) {
 			game.socket.send(JSON.stringify({messageType: 'clientConnection', nickname: res.nick}));
+			console.log(res.nick);
 		});
 	};
 
