@@ -7,9 +7,9 @@ var WebSocketServer = require('websocket').server;
 var app = express();
 
 app.use(express.static('.'));
-
-app.listen(3000, function () {
-	console.log('Example app listening on port 3000!');
+var port = process.env.PORT || 8080;
+app.listen( port, function () {
+	console.log('Example app listening on port '+port+'!');
 });
 
 var gameLogic = require('./game_logic.js');
