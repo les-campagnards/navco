@@ -9,18 +9,14 @@ var game = {
 	state: 'notConnected',
 	renderer: {},
 	inputs: {
+		sendToServer : false,
 		keyboardInputState : {
 			left: 'up',
 			top: 'up',
 			right: 'up',
 			down: 'up'
 		},
-		mouseInputState : {
-
-		}
-			// TODO: figure out how inputs show work, I guess we should accumulate inputs from the
-			// network into a list and for each frame the game logic will consume the list and react
-			// to the inputs or something.
+		mouseInputState : null //null until we acquier the first move event.
 	},
 	actors: {
 			// dynamic game objects
@@ -63,9 +59,11 @@ function setUpServerConnection () {
 		}
 		if (msg.messageType === 'gameStarted') {
 			game.state = 'playing';
+			game.inputs.sendToServer = true;
 		}
 		if (msg.messageType === 'gameEnded') {
 			game.state = 'connected';
+			game.inputs.sendToServer = false;
 			tryToStartGame();
 		}
 		if (msg.messageType === 'gameState') {
@@ -79,7 +77,7 @@ function prepareInputMessage (evt, upOrDown) {
 	evt = evt || window.event;
 	var charCode = evt.keyCode || evt.which;
 	var key = null;
-	var inputstate = game.inputs.keyboardInputState;
+	var inputState = game.inputs.keyboardInputState;
 	// TODO : add querty and azerty usuel input key support
 	switch (charCode) {
 	case 37:
@@ -149,38 +147,45 @@ function handleMouseMove(event) {
     };
 }
 function getMousePosition() {
+	if(game.inputs.sendToServer) {
     var pos = game.inputs.mouseInputState;
     if (!pos) {
         // We haven't seen any movement yet
     }
     else {
-       game.socket.send(JSON.stringify({messageType: 'playerInput', mousePosition:pos}));
+       
+       		game.socket.send(JSON.stringify({messageType: 'playerInput', mousePosition:pos}));
        //send regular update about mouse position to server
+       //TODO : transform mouse position in pixels to something in worldspace.
     }
+  }
 
 }
 
-
-function setUpInputCatching () {
+function setUpInputCatching() {
 
 	document.onmousemove = handleMouseMove;
 	setInterval(getMousePosition, 100); // setInterval repeats every X ms
 
 
 	document.onkeydown = function (evt) {
-		var msg = prepareInputMessage(evt, 'down');
-		if (msg) {
-			game.socket.send(JSON.stringify(msg));
-
-			console.log('inputMessageSent' + JSON.stringify(msg));
+		if(game.inputs.sendToServer) {
+			var msg = prepareInputMessage(evt, 'down');
+			if (msg) {
+				
+					game.socket.send(JSON.stringify(msg));
+			}
 		}
 	};
 	document.onkeyup = function (evt) {
-		var msg = prepareInputMessage(evt, 'up');
-		if (msg) {
-			game.socket.send(JSON.stringify(msg));
-			console.log('inputMessageSent' + JSON.stringify(msg));
+		if(game.inputs.sendToServer){
+			var msg = prepareInputMessage(evt, 'up');
+			if (msg) {
+				 
+					game.socket.send(JSON.stringify(msg));
+			}
 		}
+		
 	};
 }
 
@@ -255,4 +260,6 @@ function handleServerMessage (msg) {
 	game.info = msg.gameInfos;
 	game.objects = msg.objects;
 	game.events = game.events.concat(msg.events);
+
+
 }
