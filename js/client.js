@@ -9,6 +9,15 @@ var game = {
 	state: 'notConnected',
 	renderer: {},
 	inputs: {
+		keyboardInputState : {
+			left: 'up',
+			top: 'up',
+			right: 'up',
+			down: 'up'
+		},
+		mouseInputState : {
+
+		}
 			// TODO: figure out how inputs show work, I guess we should accumulate inputs from the
 			// network into a list and for each frame the game logic will consume the list and react
 			// to the inputs or something.
@@ -65,17 +74,12 @@ function setUpServerConnection () {
 	};
 }
 
-var inputState = {
-	left: 'up',
-	top: 'up',
-	right: 'up',
-	down: 'up'
-};
 
 function prepareInputMessage (evt, upOrDown) {
 	evt = evt || window.event;
 	var charCode = evt.keyCode || evt.which;
 	var key = null;
+	var inputstate = game.inputs.keyboardInputState;
 	// TODO : add querty and azerty usuel input key support
 	switch (charCode) {
 	case 37:
@@ -117,7 +121,6 @@ function prepareInputMessage (evt, upOrDown) {
 }
 
 
-var mousePos = null;
 
 function handleMouseMove(event) {
     var dot, eventDoc, doc, body, pageX, pageY;
@@ -140,13 +143,13 @@ function handleMouseMove(event) {
           (doc && doc.clientTop  || body && body.clientTop  || 0 );
     }
 
-    mousePos = {
+    game.inputs.mouseInputState = {
         x: event.pageX,
         y: event.pageY
     };
 }
 function getMousePosition() {
-    var pos = mousePos;
+    var pos = game.inputs.mouseInputState;
     if (!pos) {
         // We haven't seen any movement yet
     }
