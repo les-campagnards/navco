@@ -60,10 +60,13 @@ function setUpServerConnection () {
 		if (msg.messageType === 'gameStarted') {
 			game.state = 'playing';
 			game.inputs.sendToServer = true;
+			rendererInit(game);
+			animCb();
 		}
 		if (msg.messageType === 'gameEnded') {
 			game.state = 'connected';
 			game.inputs.sendToServer = false;
+			//TODO : clean up display
 			tryToStartGame();
 		}
 		if (msg.messageType === 'gameState') {
@@ -211,9 +214,7 @@ function clientMain () {
 
 	setUpInputCatching();
 
-	rendererInit(game);
 
-	animCb();
 }
 
 function animCb () {
@@ -240,15 +241,6 @@ function clientGameTick (elapsedTime) {
 		// TODO
 		console.log(events[i]);
 	}
-}
-
-function pauseGame () {
-	game.running = false;
-}
-
-function resumeGame () {
-	game.running = true;
-	animCb(16);
 }
 
 function handleServerMessage (msg) {
