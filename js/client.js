@@ -67,6 +67,10 @@ function setUpServerConnection () {
 			game.state = 'connected';
 			game.inputs.sendToServer = false;
 			//TODO : clean up display
+
+			var canvas = document.querySelector("canvas"); 
+			canvas.parentNode.removeChild(canvas);
+
 			tryToStartGame();
 		}
 		if (msg.messageType === 'gameState') {
