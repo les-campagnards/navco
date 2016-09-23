@@ -1,0 +1,49 @@
+/* Couleurs : 
+
+grey background */
+
+/* Polices : */
+
+
+
+
+/* PROPRIETES GENERALES */
+
+*{
+	box-sizing: border-box;
+}
+
+h1,h2{
+	font-family: 'Creepster', cursive;
+	text-align: center;
+}
+
+/* Le jeu prend exactement la totalité du viewport en hauteur et largeur */
+ body{
+ 	margin : 0;
+ 	display: flex;
+ 	flex-direction: column;
+ 	min-height: 100vh;
+ 	min-width: 100vw;
+ 	background-color: #1B2631;
+ }
+
+.hidden{
+	display : none;
+}
+
+
+/* MAIN*/
+
+main, footer{
+	margin: 0 auto;
+}
+
+#pseudo, #playSendButton{
+	display: block;
+	margin: 0 auto;
+}
+
+
+
+/* Footer */
