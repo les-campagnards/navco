@@ -88,8 +88,6 @@ function rendererTick (game, elapsedTime) {
 		renderObj.renderNode.rotation = gameObj.rotation;
 	}
 
-	if (game.renderer.objects.nical) {
-	}
 
 	updateCamera(game, elapsedTime);
 

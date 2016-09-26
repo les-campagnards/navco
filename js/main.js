@@ -5,11 +5,13 @@ var WebSocketServer = require('ws').Server;
 
 var gameLogic = require('./game_logic.js');
 
+
 var server = express()	
 	.use(express.static('.'))
 	.listen( process.env.PORT || 8080, function () {
 		console.log('Gamer server up fort http!');
 	});
+
 
 var wsServer = new WebSocketServer({ server });
 

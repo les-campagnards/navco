@@ -69,7 +69,7 @@ var notifystatus = function () {
 	var remainingTime = rules.gameDuration - (Date.now() - gamestatus.gameStartTimestamp);
 	if (remainingTime > 0) {
 		players.filter(function (elem) {
-			elem.status === 'playing';
+			return elem.status === 'playing';
 		}).forEach(function (player) {
 			player.connection.send(JSON.stringify({
 				messageType: 'gamestatus',
@@ -107,27 +107,27 @@ function fakeMessage (elapsedTime) {
 			'remaningPoints': 3
 		},
 		'objects': {
-			'nical': {
-				'type': 'player1',
-				'position': players[0].position,
-				'rotation': players[0].mousePosition.x / 360,
-				'speed': [5, 7],
-				'acceleration': [1, 0],
-				'radius': 5,
-				'handicap': 54
-			},
-			'Gruck': {
-				'type': 'player2',
-				'position': players[1].position,
-				'rotation': players[1].mousePosition.x / 360,
-				'speed': [2, 0],
-				'acceleration': [0, 3],
-				'radius': 2
-			}
+
 		},
 		'events': [
 		]
 	};
+
+	players.filter(function(elem){
+		return elem.status === 'playing';
+	}).forEach(function(player, index){
+		msg.objects[index == 0 ? "nical" :"Gruck"] = {
+				'type': 'player'+ (index+1),
+				'position': player.position,
+				'rotation': player.mousePosition.x / 360,
+				'speed': [5, 7],
+				'acceleration': [1, 0],
+				'radius': 5,
+				'handicap': 54
+			}
+	})
+
+
 	if (meh++ % 100 === 0) {
 		msg.events.push({
 			'id': 'NicalPrendCher',
