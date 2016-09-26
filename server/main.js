@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
+'use strict';
+
 var express = require('express');
 var WebSocketServer = require('ws').Server;
 
 var gameLogic = require('./game_logic.js');
 
 var server = express()	
-	.use(express.static('.'))
+	.use(express.static('./public'))
 	.listen( process.env.PORT || 8080, function () {
 		console.log('Gamer server up fort http!');
 	});
@@ -26,10 +28,10 @@ wsServer.on('connection', function (connection) {
 		if (messageData.messageType === 'clientConnection') {
 			player = gameLogic.playerConnected(connection, messageData.nickname);
 			connection.send(JSON.stringify({messageType: 'connectionAuthorized', nickname: player.nickname}));
+		} else if (messageData.messageType === 'clientReady' && player) {
+			gameLogic.playerReady(player);
 		} else if (messageData.messageType === 'playerInput' && player) {
 			gameLogic.playerInput(player, messageData);
-		} else if (messageData.messageType === 'clientReady') {
-			gameLogic.playerReady(player);
 		}
 	});
 
