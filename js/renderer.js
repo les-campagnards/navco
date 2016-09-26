@@ -142,4 +142,4 @@ function glm_vec2 (v) { return [v.x, v.y]; }
 function isPixiVec2 (v) { return !!v && !!v.x && !!v.x; }
 function isVec2 (v) { return !!v && !!v[0] && !!v[1]; }
 function pixi_set_vec2 (dst, src) { dst.x = src[0]; dst.y = src[1]; }
-function pixi_vec2 (v) { return { x: v[0], y: [1] }; }
+function pixi_vec2 (v) { return { x: v[0], y: v[1] }; }
