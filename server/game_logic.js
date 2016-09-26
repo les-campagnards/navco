@@ -1,3 +1,5 @@
+'use strict';
+
 var players = [];
 
 var gamestatus = {

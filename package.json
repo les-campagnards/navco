@@ -17,6 +17,6 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "node js/main.js"
+    "start": "node server/main.js"
   }
 }
